@@ -21,7 +21,7 @@ jobs:
       - image: mysql:5.7
         environment:
           MYSQL_DATABASE: app_test
-          MYSQL_ROOTPASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
           MYSQL_HOST: 127.0.0.1
     steps:
       - run: bundle exec rails db:migrate
