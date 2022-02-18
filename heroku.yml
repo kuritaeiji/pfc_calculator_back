@@ -6,6 +6,7 @@ setup:
     RAILS_LOG_TO_STDOUT: enabled
     RAILS_SERVE_STATIC_FILES: enabled
 build:
-  web: Dockerfile
+  docker:
+    web: Dockerfile
 run:
   web: bundle exec puma -C config/puma.rb
