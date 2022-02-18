@@ -9,14 +9,14 @@ jobs:
       - image: ruby:2.7.1
       - image: mysql:5.7
         environment:
-          MYSQL_DATABASE: app_test
-          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: 'app_test'
+          MYSQL_ROOT_PASSWORD: 'password'
           MYSQL_ROOT_HOST: '%'
     environment:
-        MYSQL_USERNAME: root
-        MYSQL_PASSWORD: password
-        MYSQL_HOST: localhost
-        RAILS_ENV: test
+        MYSQL_USERNAME: 'root'
+        MYSQL_PASSWORD: 'password'
+        MYSQL_HOST: 'localhost'
+        RAILS_ENV: 'test'
     steps:
       - checkout
       - ruby/install-deps
