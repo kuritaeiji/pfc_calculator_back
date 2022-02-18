@@ -1,36 +1,36 @@
 version: 2.1
 
 orbs:
-  heroku: circleci/heroku@1.2.6
+  ruby: circleci/ruby@1.4.0
 
 jobs:
-  build_and_test:
+  build:
     docker:
       - image: ruby:2.7.1
-      - image: circleci/mysql:5.7
-        name: 'db'
-        environment:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: root
-    environment:
-      MYSQL_PASSWORD: password
-      MYSQL_USERNAME: root
-      MYSQL_HOST: db
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-      - run: bundle install
-      - save_cache:
-          paths:
-            - /usr/local/bundle
-          key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-      - run: bundle exec rails db:create
+      - ruby/install-deps
+  test:
+    docker:
+      - image: ruby:2.7.1
+        environment:
+          MYSQL_USERNAME: root
+          MYSQL_PASSWORD: password
+          MYSQL_HOST: 127.0.0.1
+          RAILS_ENV: test
+      - image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: app_test
+          MYSQL_ROOTPASSWORD: password
+          MYSQL_HOST: 127.0.0.1
+    steps:
       - run: bundle exec rails db:migrate
       - run: bundle exec rspec
 
 workflows:
-  build_and_deploy:
+  test_and_deploy:
     jobs:
-      - build_and_test
+      - build
+      - test:
+          requires:
+            - build
