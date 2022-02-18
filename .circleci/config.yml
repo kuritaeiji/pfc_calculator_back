@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   ruby: circleci/ruby@1.4.0
+  heroku: circleci/heroku@1.2.6
 
 jobs:
   build_and_test:
@@ -23,8 +24,20 @@ jobs:
       - ruby/install-deps
       - run: bundle exec rails db:migrate
       - run: bundle exec rspec
+  deploy:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git
 
 workflows:
   test_and_deploy:
     jobs:
       - build_and_test
+      - deploy:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only: master
