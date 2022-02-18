@@ -22,7 +22,7 @@ jobs:
       - checkout
       - ruby/install-deps
       - run: bundle exec rails db:migrate
-      - run: bundle exec rails rspec
+      - run: bundle exec rspec
 
 workflows:
   test_and_deploy:
