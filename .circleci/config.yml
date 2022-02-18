@@ -25,7 +25,7 @@ jobs:
           MYSQL_HOST: 127.0.0.1
     steps:
       - run: bundle exec rails db:migrate
-      - run: bundle exec rspec
+      - ruby/rspec-test
 
 workflows:
   test_and_deploy:
