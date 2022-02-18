@@ -4,33 +4,26 @@ orbs:
   ruby: circleci/ruby@1.4.0
 
 jobs:
-  build:
+  build_and_test:
     docker:
       - image: ruby:2.7.1
-    steps:
-      - checkout
-      - ruby/install-deps
-  test:
-    docker:
-      - image: ruby:2.7.1
-        environment:
-          MYSQL_USERNAME: root
-          MYSQL_PASSWORD: password
-          MYSQL_HOST: 127.0.0.1
-          RAILS_ENV: test
       - image: mysql:5.7
         environment:
           MYSQL_DATABASE: app_test
           MYSQL_ROOT_PASSWORD: password
           MYSQL_HOST: 127.0.0.1
+    environment:
+        MYSQL_USERNAME: root
+        MYSQL_PASSWORD: password
+        MYSQL_HOST: 127.0.0.1
+        RAILS_ENV: test
     steps:
+      - checkout
+      - ruby/install-deps
       - run: bundle exec rails db:migrate
-      - ruby/rspec-test
+      - run: bundle exec rails rspec
 
 workflows:
   test_and_deploy:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - build_and_test
