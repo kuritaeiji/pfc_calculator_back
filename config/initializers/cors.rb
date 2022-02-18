@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins(ENV['FRONT_ORIGIN'])
+    origins(ENV['FRONT_ORIGIN'] || 'pfc-calculator-front.herokuapp.com')
 
     resource '*',
       headers: :any,
