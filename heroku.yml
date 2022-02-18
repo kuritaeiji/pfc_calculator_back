@@ -1,0 +1,11 @@
+setup:
+  config:
+    FRONT_ORIGIN: pfc-calcultor-front.herokuapp.com
+    RACK_ENV: production
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: enabled
+    RAILS_SERVE_STATIC_FILES: enabled
+build:
+  web: Dockerfile
+run:
+  web: bundle exec puma -C config/puma.rb
