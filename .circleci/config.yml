@@ -5,7 +5,7 @@ orbs:
   heroku: circleci/heroku@1.2.6
 
 jobs:
-  build:
+  build_and_test:
     docker:
       - image: ruby:2.7.1
       - image: circleci/mysql:5.7
@@ -22,21 +22,6 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-  test:
-    docker:
-      - image: ruby:2.7.1
-      - image: circleci/mysql:5.7
-        environment:
-          MYSQL_DATABASE: app_test
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_HOST: db
-        name: db
-    environment:
-        MYSQL_USERNAME: root
-        MYSQL_PASSWORD: password
-        MYSQL_HOST: db
-        RAILS_ENV: test
-    steps:
       - run: bundle exec rails db:migrate
       - run: bundle exec rspec
   deploy:
@@ -49,13 +34,10 @@ jobs:
 workflows:
   test_and_deploy:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - build_and_test
       - deploy:
           requires:
-            - test
+            - build_and_test
           filters:
             branches:
               only: master
