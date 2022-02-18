@@ -12,16 +12,17 @@ jobs:
         environment:
           MYSQL_DATABASE: app_test
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_HOST: 'db'
+          MYSQL_HOST: db
         name: db
     environment:
         MYSQL_USERNAME: root
         MYSQL_PASSWORD: password
-        MYSQL_HOST: 'db'
+        MYSQL_HOST: db
         RAILS_ENV: test
     steps:
       - checkout
       - ruby/install-deps
+      - run: sleep 30
       - run: bundle exec rails db:migrate
       - run: bundle exec rspec
   deploy:
