@@ -11,11 +11,12 @@ jobs:
         environment:
           MYSQL_DATABASE: 'app_test'
           MYSQL_ROOT_PASSWORD: 'password'
-          MYSQL_ROOT_HOST: '%'
+          MYSQL_HOST: 'db'
+        name: db
     environment:
         MYSQL_USERNAME: 'root'
         MYSQL_PASSWORD: 'password'
-        MYSQL_HOST: 'localhost'
+        MYSQL_HOST: 'db'
         RAILS_ENV: 'test'
     steps:
       - checkout
