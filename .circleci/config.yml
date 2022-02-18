@@ -7,6 +7,15 @@ jobs:
   build_and_test:
     docker:
       - image: ruby:2.7.1
+      - image: mysql:5.7
+        name: 'db'
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: root
+    environment:
+      MYSQL_PASSWORD: password
+      MYSQL_USERNAME: root
+      MYSQL_HOST: db
     steps:
       - checkout
       - restore_cache:
@@ -18,6 +27,7 @@ jobs:
             - /usr/local/bundle
           key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
       - run: bundle exec rails db:create
+      - run: bundle exec rails db:migrate
       - run: bundle exec rspec
 
 workflows:
