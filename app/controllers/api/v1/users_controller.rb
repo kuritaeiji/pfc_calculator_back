@@ -4,6 +4,7 @@ class Api::V1::UsersController < ApplicationController
     user = User.new(user_params)
     if user.save
       UserMailer.with(user: user).activate_user_email.deliver_later
+      render(status: 200)
     else
       render(status: 400, json: user.errors.full_messages)
     end
@@ -11,6 +12,7 @@ class Api::V1::UsersController < ApplicationController
 
   # PUT /api/v1/activate
   def update
+    activate_user
   end
 
   private

@@ -19,6 +19,10 @@ module AuthToken
       "#{num}#{I18n.t("datetime.prompts.#{unit}")}間"
     end
 
+    def default_lifetime
+      2.weeks
+    end
+
     private
 
     def secret_key
@@ -27,10 +31,6 @@ module AuthToken
 
     def algolithm
       'HS256'
-    end
-
-    def default_lifetime
-      2.weeks
     end
   end
 end

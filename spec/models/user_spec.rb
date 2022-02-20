@@ -85,4 +85,42 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe('find_from_token_class_method') do
+    let(:user) { create(:user) }
+
+    context('不正なトークンの場合') do
+      it('JWT::DecodeErrorが発生する') do
+        token = "#{AuthToken.create_token(sub: user.id)}hoge"
+        expect { User.find_from_token(token) }.to raise_error(JWT::DecodeError)
+
+      end
+    end
+
+    context('ユーザーが見つからない場合') do
+      it('ActiveRecord::RecordNotFoundエラーが発生する') do
+        token = AuthToken.create_token(sub: 0)
+        expect { User.find_from_token(token) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context('正しいトークンでユーザーが見つかる場合') do
+      it('ユーザーを返す') do
+        token = user.create_token
+        expect(User.find_from_token(token)).to eq(user)
+      end
+    end
+  end
+
+  describe('create_token') do
+    it('トークンを返す') do
+      Timecop.freeze(Time.now)
+      user = create(:user)
+      token = user.create_token
+      payload = AuthToken.decode(token: token)
+
+      expect(payload[:sub]).to eq(user.id)
+      expect(payload[:exp]).to eq(AuthToken.default_lifetime.from_now.to_i)
+    end
+  end
 end

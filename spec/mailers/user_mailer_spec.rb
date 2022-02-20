@@ -10,6 +10,6 @@ RSpec.describe UserMailer, type: :mailer do
     expect(mail.to[0]).to eq(user.email)
     expect(mail.subject).to eq('アカウント有効化のお知らせ')
     expect(mail.body).to match('1時間')
-    expect(URI.extract(mail.body.encoded)[0]).to match(/http:\/\/pfc-calculator-back.herokuapp.com\/api\/v1\/activate\?token=/)
+    expect(URI.extract(mail.body.encoded)[0]).to match(/http:\/\/localhost:8080\/activate\?token=/)
   end
 end

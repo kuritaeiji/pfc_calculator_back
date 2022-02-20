@@ -1,4 +1,4 @@
 <h1>アカウント有効化のお知らせ</h1>
 
 <p><%= @lifetime_string %>以内に下記urlから有効化してください。</p>
-<%= link_to('有効化リンク', api_v1_activate_url(token: @token)) %>
+<%= link_to('有効化リンク', @url) %>
