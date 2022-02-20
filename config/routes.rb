@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     namespace(:v1) do
       post('signup', to: 'users#create')
       put('activate', to: 'users#update')
+
+      post('login', to: 'user_token#create')
     end
   end
 end

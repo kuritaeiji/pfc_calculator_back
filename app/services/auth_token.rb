@@ -20,7 +20,7 @@ module AuthToken
     end
 
     def default_lifetime
-      2.weeks
+      1.year
     end
 
     private
