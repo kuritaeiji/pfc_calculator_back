@@ -9,13 +9,31 @@ module Authenticator
   end
 
   def activate_user
-    user = User.find_from_token(activate_params[:token])
-
+    user = fetch_user(activate_params[:token])
+    return head(:unauthorized) unless user
     return head(:conflict) if user.activated? || user.other_activated_user?
 
     user.update(activated: true)
     head(:ok)
+  end
+
+  def logged_in_user
+    head(:unauthorized) unless current_user
+  end
+
+  def current_user
+    @current_user ||= fetch_user(token_from_client)
+  end
+
+  private
+
+  def fetch_user(token)
+    User.find_from_token(token)
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-    head(:unauthorized) # tokenが不正かuserが見つからない
+    nil
+  end
+
+  def token_from_client
+    request.headers[:Authorization]
   end
 end

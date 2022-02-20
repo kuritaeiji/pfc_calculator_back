@@ -1,6 +1,25 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Users', type: :request do
+  describe('GET /api/v1/current_user') do
+    let(:path) { '/api/v1/current_user' }
+    let(:user) { create(:user) }
+
+    context('ログインしている場合') do
+      it('ユーザーを返す') do
+        get(path, login_header(user))
+        expect(json['user']['id']).to eq(user.id)
+      end
+    end
+
+    context('ログインしていない場合') do
+      it('401エラーを返す') do
+        get(path)
+        expect(status).to eq(401)
+      end
+    end
+  end
+
   describe('POST /api/v1/signup') do
     let(:path) { '/api/v1/signup' }
 
