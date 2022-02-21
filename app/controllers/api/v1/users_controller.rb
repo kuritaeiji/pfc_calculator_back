@@ -1,4 +1,6 @@
 class Api::V1::UsersController < ApplicationController
+  before_action(:logged_in_user, only: [:destroy])
+
   # POST /api/v1/signup
   def create
     user = User.new(user_params)
@@ -13,6 +15,12 @@ class Api::V1::UsersController < ApplicationController
   # PUT /api/v1/activate
   def update
     activate_user
+  end
+
+  # DELETE /api/v1/withdraw
+  def destroy
+    current_user.destroy
+    head(:ok)
   end
 
   private

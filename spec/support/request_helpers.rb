@@ -7,5 +7,9 @@ module Request
     def status
       @status ||= response.status
     end
+
+    def login_header(user)
+      { headers: { Authorization: "Bearer #{user.create_token}" } }
+    end
   end
 end
