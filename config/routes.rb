@@ -6,6 +6,8 @@ Rails.application.routes.draw do
       delete('withdraw', to: 'users#destroy')
 
       post('login', to: 'user_token#create')
+
+      resources(:categories, except: [:show])
     end
   end
 end
