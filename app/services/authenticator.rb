@@ -34,6 +34,6 @@ module Authenticator
   end
 
   def token_from_client
-    request.headers[:Authorization]
+    request.headers[:Authorization]&.sub(/^Bearer /, '')
   end
 end
