@@ -8,4 +8,8 @@
   user.password = password
   user.activated = true
   user.save!
+
+  3.times do |num|
+    user.categories << Category.create!(title: "カテゴリー#{num}")
+  end
 end

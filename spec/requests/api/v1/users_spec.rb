@@ -104,13 +104,13 @@ RSpec.describe 'Api::V1::Users', type: :request do
       let!(:user) { create(:user) }
 
       it('200レスポンスを返す') do
-        delete(path, login_header(user))
+        delete(path, headers: login_header(user))
         expect(status).to eq(200)
       end
 
       it('ユーザーが削除される') do
         expect do
-          delete(path, login_header(user))
+          delete(path, headers: login_header(user))
         end.to change(User, :count).by(-1)
       end
     end
