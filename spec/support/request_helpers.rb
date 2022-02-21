@@ -9,7 +9,7 @@ module Request
     end
 
     def login_header(user)
-      { headers: { Authorization: user.create_token } }
+      { headers: { Authorization: "Bearer #{user.create_token}" } }
     end
   end
 end

@@ -89,4 +89,30 @@ RSpec.describe 'Api::V1::Users', type: :request do
       end
     end
   end
+
+  describe('DELETE /api/v1/withdraw') do
+    let(:path) { '/api/v1/withdraw' }
+
+    context('ログインしていない場合') do
+      it('401エラーを返す') do
+        delete(path)
+        expect(status).to eq(401)
+      end
+    end
+
+    context('ログインしている場合') do
+      let!(:user) { create(:user) }
+
+      it('200レスポンスを返す') do
+        delete(path, login_header(user))
+        expect(status).to eq(200)
+      end
+
+      it('ユーザーが削除される') do
+        expect do
+          delete(path, login_header(user))
+        end.to change(User, :count).by(-1)
+      end
+    end
+  end
 end
