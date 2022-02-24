@@ -11,7 +11,7 @@ class Api::V1::CategoriesController < ApplicationController
   def create
     category = current_user.categories.new(category_params)
     if category.save
-      head(200)
+      render(json: category, serializer: CategorySerializer, root: 'category', adapter: :json)
     else
       render(status: 400, json: category.errors.full_messages)
     end
@@ -19,8 +19,11 @@ class Api::V1::CategoriesController < ApplicationController
 
   # PUT /api/v1/category/:id
   def update
-    @category.update(category_params)
-    head(200)
+    if @category.update(category_params)
+      render(json: @category, serializer: CategorySerializer, root: 'category', adapter: :json)
+    else
+      render(status: 400, json: @category.errors.full_messages)
+    end
   end
 
   # DELETE /api/v1/category/:id

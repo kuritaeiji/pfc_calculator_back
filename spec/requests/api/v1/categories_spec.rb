@@ -32,9 +32,9 @@ RSpec.describe 'Api::V1::Categories', type: :request do
       context('有効なパラメーターの場合') do
         let(:params) { { category: { title: 'カテゴリー' } } }
 
-        it('200レスポンスを返す') do
+        it('作成したカテゴリーを返す') do
           post(path, headers: login_header(user), params: params)
-          expect(status).to eq(200)
+          expect(json['category']['title']).to eq('カテゴリー')
         end
 
         it('カテゴリーを作成する') do
@@ -63,18 +63,41 @@ RSpec.describe 'Api::V1::Categories', type: :request do
     end
   end
 
-  describe('PUT /api/v1/category/:id') do
+  describe('PUT /api/v1/categories/:id') do
     context('ログインしている場合') do
       let(:user) { create(:user) }
 
       context('カテゴリーが見つかる場合') do
         let!(:category) { create(:category, user: user) }
-        let(:params) { { category: { title: 'new_title' } } }
 
-        it('カテゴリーを更新する') do
-          put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
-          expect(category.reload.title).to eq('new_title')
-          expect(status).to eq(200)
+        context('有効なパラメーターの場合') do
+          let(:params) { { category: { title: 'new_title' } } }
+
+          it('更新したカテゴリーを返す') do
+            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+            expect(json['category']['title']).to eq('new_title')
+          end
+  
+          it('カテゴリーを更新する') do
+            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+            expect(category.reload.title).to eq('new_title')
+          end
+        end
+
+        context('無効なパラメーターの場合') do
+          let(:params) { { category: { title: '' } } }
+
+          it('カテゴリーを更新できない') do
+            title = category.title
+            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+            expect(category.reload.title).to eq(title)
+          end
+
+          it('バリデーションメッセージを返す') do
+            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+            expect(status).to eq(400)
+            expect(json[0]).to include(I18n.t('errors.messages.blank'))
+          end
         end
       end
 
