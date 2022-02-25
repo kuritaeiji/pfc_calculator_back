@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :food do
-    title { 'フード' }
+    sequence(:title) { |n| "フード#{n}" }
     per { 100 }
     unit { 'g' }
     calory { 100 }

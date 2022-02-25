@@ -10,5 +10,17 @@ FactoryBot.define do
         3.times { user.categories << FactoryBot.build(:category) }
       end
     end
+
+    trait('with_foods') do
+      after(:build) do |user|
+        3.times do
+          category = FactoryBot.build(:category)
+          user.categories << category
+          3.times do
+            category.foods << FactoryBot.build(:food)
+          end
+        end
+      end
+    end
   end
 end

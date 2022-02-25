@@ -10,6 +10,10 @@
   user.save!
 
   3.times do |num|
-    user.categories.create!(title: "カテゴリー#{num}")
+    category = user.categories.create!(title: "カテゴリー#{num}")
+    3.times do |number|
+      category.foods.create!(title: "鶏胸肉#{number}", per: 100, unit: 'g',
+                             calory: 120, protein: 23.45, fat: 0.1, carbonhydrate: 0.23)
+    end
   end
 end

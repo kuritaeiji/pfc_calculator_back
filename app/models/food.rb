@@ -13,4 +13,5 @@ class Food < ApplicationRecord
   validates(:carbonhydrate, decimal: true)
 
   default_scope { order(:id) }
+  delegate(:user, to: :category)
 end
