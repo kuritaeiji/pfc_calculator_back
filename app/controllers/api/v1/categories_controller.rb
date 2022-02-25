@@ -4,14 +4,14 @@ class Api::V1::CategoriesController < ApplicationController
 
   # GET /api/v1/categories
   def index
-    render(json: current_user.categories, each_serializer: CategorySerializer, root: 'categories', adapter: :json)
+    render(json: current_user.categories, each_serializer: CategorySerializer)
   end
 
   # POST /api/v1/categories
   def create
     category = current_user.categories.new(category_params)
     if category.save
-      render(json: category, serializer: CategorySerializer, root: 'category', adapter: :json)
+      render(json: category, serializer: CategorySerializer)
     else
       render(status: 400, json: category.errors.full_messages)
     end
@@ -20,7 +20,7 @@ class Api::V1::CategoriesController < ApplicationController
   # PUT /api/v1/category/:id
   def update
     if @category.update(category_params)
-      render(json: @category, serializer: CategorySerializer, root: 'category', adapter: :json)
+      render(json: @category, serializer: CategorySerializer)
     else
       render(status: 400, json: @category.errors.full_messages)
     end
