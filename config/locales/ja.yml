@@ -6,6 +6,8 @@ ja:
         email: メールアドレス
         password: パスワード
         acvtivated: 有効化フラグ
+      category:
+        title: カテゴリー名
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'
