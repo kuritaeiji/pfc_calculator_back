@@ -9,7 +9,7 @@ RSpec.describe 'Api::V1::Categories', type: :request do
 
       it('カテゴリー一覧を返す') do
         get(path, headers: login_header(user))
-        expect(json['categories'][0]['title']).to eq('カテゴリー1')
+        expect(json['categories'][0]['title']).to include('カテゴリー')
         expect(json['categories'][0]['id'].present?).to eq(true)
         expect(json['categories'].length).to eq(3)
       end
