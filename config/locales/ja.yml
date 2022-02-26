@@ -8,6 +8,14 @@ ja:
         acvtivated: 有効化フラグ
       category:
         title: カテゴリー名
+      food:
+        title: 名前
+        per: 単位量当たり
+        unit: 単位
+        calory: カロリー
+        protein: タンパク質
+        fat: 脂質
+        carbonhydrate: 炭水化物
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'
@@ -117,6 +125,7 @@ ja:
   errors:
     format: "%{attribute}%{message}"
     messages:
+      precision: は%{precision}桁以内で入力して下さい
       password: は大文字英字、小文字英字、数字の3種類を含めて下さい。また、半角英数字、ハイフン、アンダーバーが使えます。
       accepted: を受諾してください
       blank: を入力してください

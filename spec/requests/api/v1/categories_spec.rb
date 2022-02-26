@@ -9,7 +9,7 @@ RSpec.describe 'Api::V1::Categories', type: :request do
 
       it('カテゴリー一覧を返す') do
         get(path, headers: login_header(user))
-        expect(json['categories'][0]['title']).to eq('カテゴリー1')
+        expect(json['categories'][0]['title']).to include('カテゴリー')
         expect(json['categories'][0]['id'].present?).to eq(true)
         expect(json['categories'].length).to eq(3)
       end
@@ -68,35 +68,46 @@ RSpec.describe 'Api::V1::Categories', type: :request do
       let(:user) { create(:user) }
 
       context('カテゴリーが見つかる場合') do
-        let!(:category) { create(:category, user: user) }
+        context('カレントユーザーの所有しているカテゴリーの場合') do
+          let!(:category) { create(:category, user: user) }
 
-        context('有効なパラメーターの場合') do
-          let(:params) { { category: { title: 'new_title' } } }
+          context('有効なパラメーターの場合') do
+            let(:params) { { category: { title: 'new_title' } } }
 
-          it('更新したカテゴリーを返す') do
-            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
-            expect(json['category']['title']).to eq('new_title')
+            it('更新したカテゴリーを返す') do
+              put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+              expect(json['category']['title']).to eq('new_title')
+            end
+
+            it('カテゴリーを更新する') do
+              put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+              expect(category.reload.title).to eq('new_title')
+            end
           end
-  
-          it('カテゴリーを更新する') do
-            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
-            expect(category.reload.title).to eq('new_title')
+
+          context('無効なパラメーターの場合') do
+            let(:params) { { category: { title: '' } } }
+
+            it('カテゴリーを更新できない') do
+              title = category.title
+              put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+              expect(category.reload.title).to eq(title)
+            end
+
+            it('バリデーションメッセージを返す') do
+              put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
+              expect(status).to eq(400)
+              expect(json[0]).to include(I18n.t('errors.messages.blank'))
+            end
           end
         end
 
-        context('無効なパラメーターの場合') do
-          let(:params) { { category: { title: '' } } }
+        context('カレントユーザーの所有していないカテゴリーの場合') do
+          let(:category) { create(:category) }
 
-          it('カテゴリーを更新できない') do
-            title = category.title
-            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
-            expect(category.reload.title).to eq(title)
-          end
-
-          it('バリデーションメッセージを返す') do
-            put("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
-            expect(status).to eq(400)
-            expect(json[0]).to include(I18n.t('errors.messages.blank'))
+          it('401レスポンスを返す') do
+            put("/api/v1/categories/#{category.id}", headers: login_header(user))
+            expect(status).to eq(401)
           end
         end
       end
@@ -122,14 +133,25 @@ RSpec.describe 'Api::V1::Categories', type: :request do
       let(:user) { create(:user) }
 
       context('カテゴリーが見つかる場合') do
-        let!(:category) { create(:category, user: user) }
-        let(:params) { { category: { title: 'new_title' } } }
+        context('カレントユーザーが所有しているカテゴリーの場合') do
+          let!(:category) { create(:category, user: user) }
 
-        it('カテゴリーを削除する') do
-          expect do
-            delete("/api/v1/categories/#{category.id}", headers: login_header(user), params: params)
-          end.to change(user.categories, :count).by(-1)
-          expect(status).to eq(200)
+          it('カテゴリーを削除する') do
+            expect do
+              delete("/api/v1/categories/#{category.id}", headers: login_header(user))
+            end.to change(user.categories, :count).by(-1)
+            expect(status).to eq(200)
+          end
+        end
+
+        context('カレントユーザーが所有していないカテゴリーの場合') do
+          let!(:category) { create(:category) }
+          let(:params) { { category: { title: 'new_title' } } }
+
+          it('401レスポンスを返す') do
+            delete("/api/v1/categories/#{category.id}", headers: login_header(user))
+            expect(status).to eq(401)
+          end
         end
       end
 

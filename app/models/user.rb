@@ -23,6 +23,11 @@ class User < ApplicationRecord
     other_user.where(activated: true, email: email).present?
   end
 
+  # カテゴリーテーブルとjoinした状態で、ユーザーのフードを取ってくる
+  def foods
+    Food.where(category_id: category_ids).eager_load(:category)
+  end
+
   private
 
   def other_user

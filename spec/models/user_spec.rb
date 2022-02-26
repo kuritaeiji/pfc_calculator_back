@@ -88,6 +88,14 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe('foods') do
+    it('ユーザーが所持しているfoodsを取得する') do
+      user = create(:user, :with_foods)
+      expect(user.foods.count).to eq(9)
+      expect(user.foods[0].title).to include('フード')
+    end
+  end
+
   describe('find_from_token_class_method') do
     let(:user) { create(:user) }
 
@@ -95,7 +103,6 @@ RSpec.describe User, type: :model do
       it('JWT::DecodeErrorが発生する') do
         token = "#{AuthToken.create_token(sub: user.id)}hoge"
         expect { User.find_from_token(token) }.to raise_error(JWT::DecodeError)
-
       end
     end
 

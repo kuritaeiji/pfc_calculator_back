@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       post('login', to: 'user_token#create')
 
       resources(:categories, except: [:show])
+      resources(:foods, except: [:show])
     end
   end
 end
