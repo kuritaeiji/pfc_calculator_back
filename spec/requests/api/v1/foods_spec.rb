@@ -12,8 +12,8 @@ RSpec.describe 'Api::V1::Foods', type: :request do
         expect(status).to eq(200)
 
         food = json['foods'][0]
-        expect(food['title']).to eq('フード1')
-        expect(food['category']['title']).to eq('カテゴリー1')
+        expect(food['title']).to include('フード')
+        expect(food['category']['title']).to include('カテゴリー')
         expect(json['foods'].length).to eq(9)
       end
     end
@@ -31,32 +31,45 @@ RSpec.describe 'Api::V1::Foods', type: :request do
 
     context('ログインしている場合') do
       let(:user) { create(:user) }
-      let(:category) { create(:category, user: user) }
 
-      context('有効なパラメーターの場合') do
-        let(:params) { { food: attributes_for(:food).merge(category_id: category.id) } }
+      context('カレントユーザーが所有しているカテゴリーIDを送信する場合') do
+        let(:category) { create(:category, user: user) }
 
-        it('フードを作成する') do
-          expect do
+        context('有効なパラメーターの場合') do
+          let(:params) { { food: attributes_for(:food, title: 'new_food').merge(category_id: category.id) } }
+
+          it('フードを作成する') do
+            expect do
+              post(path, headers: login_header(user), params: params)
+            end.to change(category.foods, :count).by(1)
+          end
+
+          it('フードを返す') do
             post(path, headers: login_header(user), params: params)
-          end.to change(category.foods, :count).by(1)
+            expect(json['food']['title']).to eq('new_food')
+            expect(json['food']['category']['id']).to eq(category.id)
+            expect(status).to eq(200)
+          end
         end
 
-        it('フードを返す') do
-          post(path, headers: login_header(user), params: params)
-          expect(json['food']['title']).to eq('フード2')
-          expect(json['food']['category']['id']).to eq(category.id)
-          expect(status).to eq(200)
+        context('不正なパラメーターの場合') do
+          let(:params) { { food: attributes_for(:food, title: '').merge(category_id: category.id) } }
+
+          it('バリデーションメッセージを返す') do
+            post(path, headers: login_header(user), params: params)
+            expect(status).to eq(400)
+            expect(json[0]).to include(I18n.t('errors.messages.blank'))
+          end
         end
       end
 
-      context('不正なパラメーターの場合') do
-        let(:params) { { food: attributes_for(:food, category: category, title: '' ) } }
+      context('カレントユーザーが所有していないカテゴリーIDを送信する場合') do
+        let(:category) { create(:category) }
+        let(:params) { { food: attributes_for(:food, title: '').merge(category_id: category.id) } }
 
-        it('バリデーションメッセージを返す') do
+        it('401レスポンスを返す') do
           post(path, headers: login_header(user), params: params)
-          expect(status).to eq(400)
-          expect(json[0]).to include(I18n.t('errors.messages.blank'))
+          expect(status).to eq(401)
         end
       end
     end
@@ -78,28 +91,40 @@ RSpec.describe 'Api::V1::Foods', type: :request do
           let(:category) { create(:category, user: user) }
           let(:food) { create(:food, category: category) }
 
-          context('有効なパラメーターであった場合') do
-            let(:params) { { food: attributes_for(:food, title: 'new_food') } }
+          context('パラメーターのカテゴリーIDがカレントユーザーの所有するカテゴリーだった場合') do
+            context('有効なパラメーターであった場合') do
+              let(:params) { { food: attributes_for(:food, title: 'new_food').merge(category_id: category.id) } }
 
-            it('フードを更新する') do
-              put("/api/v1/foods/#{food.id}", headers: login_header(user), params: params)
-              expect(food.reload.title).to eq('new_food')
+              it('フードを更新する') do
+                put("/api/v1/foods/#{food.id}", headers: login_header(user), params: params)
+                expect(food.reload.title).to eq('new_food')
+              end
+
+              it('フードを返す') do
+                put("/api/v1/foods/#{food.id}", headers: login_header(user), params: params)
+                expect(json['food']['title']).to eq('new_food')
+                expect(json['food']['category']['id']).to eq(category.id)
+              end
             end
 
-            it('フードを返す') do
-              put("/api/v1/foods/#{food.id}", headers: login_header(user), params: params)
-              expect(json['food']['title']).to eq('new_food')
-              expect(json['food']['category']['id']).to eq(category.id)
+            context('無効なパラメーターであった場合') do
+              let(:params) { { food: attributes_for(:food, title: '').merge(category_id: category.id) } }
+
+              it('バリデーションメッセージを返す') do
+                put("/api/v1/foods/#{food.id}", headers: login_header(user), params: params)
+                expect(status).to eq(400)
+                expect(json[0]).to include(I18n.t('errors.messages.blank'))
+              end
             end
           end
 
-          context('無効なパラメーターであった場合') do
-            let(:params) { { food: attributes_for(:food, title: '') } }
+          context('パラメーターのカテゴリーIDがカレントユーザーの所有するカテゴリーでなかった場合') do
+            let(:other_category) { create(:category) }
+            let(:params) { { food: attributes_for(:food).merge(category_id: other_category.id) } }
 
-            it('バリデーションメッセージを返す') do
+            it('401レスポンスを返す') do
               put("/api/v1/foods/#{food.id}", headers: login_header(user), params: params)
-              expect(status).to eq(400)
-              expect(json[0]).to include(I18n.t('errors.messages.blank'))
+              expect(status).to eq(401)
             end
           end
         end
