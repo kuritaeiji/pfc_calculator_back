@@ -16,6 +16,8 @@ ja:
         protein: タンパク質
         fat: 脂質
         carbonhydrate: 炭水化物
+      day:
+        date: 日付
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'

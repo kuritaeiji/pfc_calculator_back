@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
       resources(:categories, except: [:show])
       resources(:foods, except: [:show])
+      resources(:days, only: [:create])
     end
   end
 end
