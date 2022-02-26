@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many(:categories, dependent: :destroy)
+  has_many(:days, dependent: :destroy)
 
   has_secure_password
 
