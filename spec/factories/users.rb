@@ -22,5 +22,15 @@ FactoryBot.define do
         end
       end
     end
+
+    trait('with_bodies') do
+      after(:build) do |user|
+        3.times do
+          day = FactoryBot.build(:day)
+          user.days << day
+          day.body = FactoryBot.build(:body)
+        end
+      end
+    end
   end
 end
