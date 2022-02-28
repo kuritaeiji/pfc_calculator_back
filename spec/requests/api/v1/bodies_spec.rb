@@ -126,8 +126,8 @@ RSpec.describe 'Api::V1::Bodies', type: :request do
 
       context('bodyが存在している場合') do
         context('カレントユーザーがbodyのオーナーである場合') do
-          let(:day) { create(:day, user: user) }
-          let(:body) { create(:body, day: day) }
+          let!(:day) { create(:day, user: user) }
+          let!(:body) { create(:body, day: day) }
           let(:path) { "/api/v1/bodies/#{body.id}/percentage" }
 
           context('有効なパラメーターの場合') do
@@ -158,7 +158,7 @@ RSpec.describe 'Api::V1::Bodies', type: :request do
         end
 
         context('bodyが他人のものである場合') do
-          let(:body) { create(:body) }
+          let!(:body) { create(:body) }
 
           it('401レスポンスを返す') do
             put("/api/v1/bodies/#{body.id}/percentage", headers: login_header(user))

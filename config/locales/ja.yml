@@ -18,6 +18,11 @@ ja:
         carbonhydrate: 炭水化物
       day:
         date: 日付
+      body:
+        weight: 体重
+        percengate: 体脂肪率
+      ate_food:
+        amount: 量
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'
