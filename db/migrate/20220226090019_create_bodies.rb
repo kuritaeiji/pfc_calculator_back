@@ -1,4 +1,6 @@
 class CreateBodies < ActiveRecord::Migration[6.0]
+  include(DecimalMigration)
+
   def change
     create_table :bodies do |t|
       t.decimal(:weight, decimal_options)
@@ -6,11 +8,5 @@ class CreateBodies < ActiveRecord::Migration[6.0]
       t.references(:day, foreign_key: true)
       t.timestamps
     end
-  end
-
-  private
-
-  def decimal_options
-    { null: false, default: 0, precision: 10, scale: 2 }
   end
 end

@@ -1,4 +1,6 @@
 class CreateFoods < ActiveRecord::Migration[6.0]
+  include(DecimalMigration)
+
   def change
     create_table :foods do |t|
       t.string(:title, null: false)
@@ -11,11 +13,5 @@ class CreateFoods < ActiveRecord::Migration[6.0]
       t.references(:category, foreign_key: true)
       t.timestamps
     end
-  end
-
-  private
-
-  def decimal_options
-    { null: false, default: 0, precision: 10, scale: 2 }
   end
 end
