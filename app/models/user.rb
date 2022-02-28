@@ -29,6 +29,10 @@ class User < ApplicationRecord
     Food.where(category_id: category_ids).eager_load(:category)
   end
 
+  def bodies
+    Body.where(day_id: day_ids).eager_load(:day)
+  end
+
   private
 
   def other_user

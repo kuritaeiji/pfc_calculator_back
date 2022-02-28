@@ -97,6 +97,15 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe('bodies') do
+    it('ユーザーが所有しているbodiesを取得する') do
+      user = create(:user, :with_bodies)
+      bodies = user.bodies
+      expect(bodies.length).to eq(3)
+      expect(bodies[0].respond_to?(:weight)).to eq(true)
+    end
+  end
+
   describe('find_from_token_class_method') do
     let(:user) { create(:user) }
 

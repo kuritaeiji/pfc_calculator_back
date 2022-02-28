@@ -9,7 +9,15 @@ Rails.application.routes.draw do
 
       resources(:categories, except: [:show])
       resources(:foods, except: [:show])
-      resources(:days, only: [:create])
+      resources(:days, param: :date, only: [:create]) do
+        resources(:bodies, only: [:create])
+      end
+      resources(:bodies) do
+        member do
+          put('weight')
+          put('percentage')
+        end
+      end
     end
   end
 end

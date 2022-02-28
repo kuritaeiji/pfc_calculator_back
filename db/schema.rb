@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_26_064612) do
+ActiveRecord::Schema.define(version: 2022_02_26_090019) do
+
+  create_table "bodies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.decimal "weight", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "percentage", precision: 10, scale: 2, default: "0.0", null: false
+    t.bigint "day_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["day_id"], name: "index_bodies_on_day_id"
+  end
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title", null: false
@@ -50,6 +59,7 @@ ActiveRecord::Schema.define(version: 2022_02_26_064612) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "bodies", "days"
   add_foreign_key "categories", "users"
   add_foreign_key "days", "users"
   add_foreign_key "foods", "categories"
