@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources(:foods, except: [:show])
       resources(:days, param: :date, only: [:create]) do
         resources(:bodies, only: [:create])
+        resources(:ate_foods, only: [:index, :create])
       end
       resources(:bodies) do
         member do
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
           put('percentage')
         end
       end
+      resources(:ate_foods, only: [:update, :destroy])
     end
   end
 end

@@ -106,6 +106,18 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe('ate_foods') do
+    it('ユーザーが所有しているate_foodsを取得する') do
+      user = create(:user)
+      day = create(:day, user: user)
+      create_list(:ate_food, 3, day: day)
+      ate_foods = user.ate_foods
+
+      expect(ate_foods.length).to eq(3)
+      expect(ate_foods[0].respond_to?(:amount)).to eq(true)
+    end
+  end
+
   describe('find_from_token_class_method') do
     let(:user) { create(:user) }
 
