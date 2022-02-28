@@ -2,8 +2,8 @@ class Api::V1::BodiesController < ApplicationController
   before_action(:logged_in_user)
   before_action(:set_day, only: [:create])
   before_action(:already_created_body, only: [:create])
-  before_action(:set_body, only: [:update])
-  before_action(:current_user_is_body_owner, only: [:update])
+  before_action(:set_body, only: [:weight, :percentage])
+  before_action(:current_user_is_body_owner, only: [:weight, :percentage])
 
   # POST /api/v1/days/:day_date/bodies
   def create
@@ -11,19 +11,32 @@ class Api::V1::BodiesController < ApplicationController
     render(json: @day.body, serializer: BodySerializer)
   end
 
-  # PUT /api/v1/bodies/:id
-  def update
-    if @body.update(body_params)
+  # PUT /api/v1/bodies/:id/weight
+  def weight
+    update(weight_params)
+  end
+
+  # PUT /api/v1/bodies/:id/percentage
+  def percentage
+    update(percentage_params)
+  end
+
+  private
+
+  def update(params)
+    if @body.update(params)
       render(json: @body, serializer: BodySerializer)
     else
       render(status: 400, json: @body.errors.full_messages)
     end
   end
 
-  private
+  def weight_params
+    params[:body].permit(:weight)
+  end
 
-  def body_params
-    params[:body].permit(:weight, :percentage)
+  def percentage_params
+    params[:body].permit(:percentage)
   end
 
   def set_day

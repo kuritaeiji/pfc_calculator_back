@@ -3,4 +3,5 @@ class Body < ApplicationRecord
 
   validates(:weight, decimal: true)
   validates(:percentage, decimal: true)
+  validates(:day_id, uniqueness: true)
 end

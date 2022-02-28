@@ -12,7 +12,12 @@ Rails.application.routes.draw do
       resources(:days, param: :date, only: [:create]) do
         resources(:bodies, only: [:create])
       end
-      resources(:bodies, only: [:update])
+      resources(:bodies) do
+        member do
+          put('weight')
+          put('percentage')
+        end
+      end
     end
   end
 end
