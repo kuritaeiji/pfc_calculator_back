@@ -24,6 +24,12 @@ ja:
       ate_food:
         amount: 量
         food_id: 食材・料理
+      dish:
+        title: 料理名
+        calory: カロリー
+        protein: タンパク質
+        fat: 脂質
+        carbonhydrate: 炭水化物
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'

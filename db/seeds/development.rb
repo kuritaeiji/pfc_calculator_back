@@ -25,6 +25,7 @@
         carbonhydrate: 0.23
       )
       day.ate_foods.create!(amount: 100, food: food)
+      day.dishes.create!(title: "ラーメン#{number}", calory: 600, protein: 40, fat: 140, carbonhydrate: 300)
     end
   end
 end
