@@ -37,6 +37,10 @@ class User < ApplicationRecord
     AteFood.where(day_id: day_ids)
   end
 
+  def dishes
+    Dish.where(day_id: day_ids)
+  end
+
   private
 
   def other_user

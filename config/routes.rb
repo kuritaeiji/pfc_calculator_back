@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources(:days, param: :date, only: [:create]) do
         resources(:bodies, only: [:create])
         resources(:ate_foods, only: [:index, :create])
+        resources(:dishes, only: [:index, :create])
       end
       resources(:bodies) do
         member do
@@ -20,6 +21,7 @@ Rails.application.routes.draw do
         end
       end
       resources(:ate_foods, only: [:update, :destroy])
+      resources(:dishes, only: [:update, :destroy])
     end
   end
 end
