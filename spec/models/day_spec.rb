@@ -4,6 +4,7 @@ RSpec.describe Day, type: :model do
   it { is_expected.to belong_to(:user) }
   it { is_expected.to have_one(:body).dependent(:destroy) }
   it { is_expected.to have_many(:ate_foods).dependent(:destroy) }
+  it { is_expected.to have_many(:dishes).dependent(:destroy) }
 
   it { is_expected.to validate_presence_of(:date) }
 
