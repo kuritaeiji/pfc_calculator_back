@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_28_023951) do
+ActiveRecord::Schema.define(version: 2022_03_01_020828) do
 
   create_table "ate_foods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
@@ -47,6 +47,18 @@ ActiveRecord::Schema.define(version: 2022_02_28_023951) do
     t.index ["user_id"], name: "index_days_on_user_id"
   end
 
+  create_table "dishes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "title", null: false
+    t.decimal "calory", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "protein", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "fat", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "carbonhydrate", precision: 10, scale: 2, default: "0.0", null: false
+    t.bigint "day_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["day_id"], name: "index_dishes_on_day_id"
+  end
+
   create_table "foods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.integer "per", null: false
@@ -74,5 +86,6 @@ ActiveRecord::Schema.define(version: 2022_02_28_023951) do
   add_foreign_key "bodies", "days"
   add_foreign_key "categories", "users"
   add_foreign_key "days", "users"
+  add_foreign_key "dishes", "days"
   add_foreign_key "foods", "categories"
 end

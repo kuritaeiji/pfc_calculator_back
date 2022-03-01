@@ -132,9 +132,9 @@ RSpec.describe 'Api::V1::Foods', type: :request do
         context('フードがカレントユーザーのものでなかった場合') do
           let(:food) { create(:food) }
 
-          it('401レスポンスを返す') do
+          it('404レスポンスを返す') do
             put("/api/v1/foods/#{food.id}", headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end
@@ -174,9 +174,9 @@ RSpec.describe 'Api::V1::Foods', type: :request do
         context('フードがカレントユーザーのものでなかった場合') do
           let(:food) { create(:food) }
 
-          it('401レスポンスを返す') do
+          it('404レスポンスを返す') do
             delete("/api/v1/foods/#{food.id}", headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end

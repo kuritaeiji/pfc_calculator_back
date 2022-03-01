@@ -2,7 +2,6 @@ class Api::V1::AteFoodsController < ApplicationController
   before_action(:logged_in_user)
   before_action(:set_day, only: [:index, :create])
   before_action(:set_ate_food, only: [:update, :destroy])
-  before_action(:current_user_is_ate_food_owner, only: [:update, :destroy])
   before_action(:current_user_is_food_owner, only: [:create, :update])
 
   # GET /api/v1/days/:day_date/ate_foods
@@ -47,15 +46,12 @@ class Api::V1::AteFoodsController < ApplicationController
   end
 
   def current_user_is_food_owner
-    head(401) unless current_user.foods.ids.include?(ate_food_params[:food_id].to_i)
+    food = current_user.foods.find_by(id: ate_food_params[:food_id])
+    head(401) unless food
   end
 
   def set_ate_food
-    @ate_food = AteFood.find_by(id: params[:id])
+    @ate_food = current_user.ate_foods.find_by(params[:id])
     head(404) unless @ate_food
-  end
-
-  def current_user_is_ate_food_owner
-    head(401) unless current_user.ate_foods.include?(@ate_food)
   end
 end
