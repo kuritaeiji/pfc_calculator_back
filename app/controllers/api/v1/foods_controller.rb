@@ -1,8 +1,7 @@
 class Api::V1::FoodsController < ApplicationController
   before_action(:logged_in_user)
   before_action(:set_food, only: [:update, :destroy])
-  before_action(:current_user_is_food_user, only: [:update, :destroy])
-  before_action(:current_user_is_category_user, only: [:create, :update])
+  before_action(:current_user_is_category_owner, only: [:create, :update])
 
   # GET /api/v1/foods
   def index
@@ -36,16 +35,12 @@ class Api::V1::FoodsController < ApplicationController
 
   private
 
-  def current_user_is_category_user
+  def current_user_is_category_owner
     head(401) unless current_user.category_ids.include?(food_params[:category_id].to_i)
   end
 
-  def current_user_is_food_user
-    head(401) unless current_user == @food.user
-  end
-
   def set_food
-    @food = Food.find_by(id: params[:id])
+    @food = current_user.foods.find_by(id: params[:id])
     head(404) unless @food
   end
 

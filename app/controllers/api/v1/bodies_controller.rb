@@ -3,7 +3,6 @@ class Api::V1::BodiesController < ApplicationController
   before_action(:set_day, only: [:create])
   before_action(:already_created_body, only: [:create])
   before_action(:set_body, only: [:weight, :percentage])
-  before_action(:current_user_is_body_owner, only: [:weight, :percentage])
 
   # POST /api/v1/days/:day_date/bodies
   def create
@@ -50,11 +49,7 @@ class Api::V1::BodiesController < ApplicationController
   end
 
   def set_body
-    @body = Body.find_by(id: params[:id])
+    @body = current_user.bodies.find_by(id: params[:id])
     head(404) unless @body
-  end
-
-  def current_user_is_body_owner
-    head(401) unless current_user.bodies.include?(@body)
   end
 end

@@ -97,9 +97,9 @@ RSpec.describe 'Api::V1::Bodies', type: :request do
         context('bodyが他人のものである場合') do
           let(:body) { create(:body) }
 
-          it('401レスポンスを返す') do
+          it('404レスポンスを返す') do
             put("/api/v1/bodies/#{body.id}/weight", headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end
@@ -160,9 +160,9 @@ RSpec.describe 'Api::V1::Bodies', type: :request do
         context('bodyが他人のものである場合') do
           let(:body) { create(:body) }
 
-          it('401レスポンスを返す') do
+          it('404レスポンスを返す') do
             put("/api/v1/bodies/#{body.id}/percentage", headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end

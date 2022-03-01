@@ -105,9 +105,9 @@ RSpec.describe 'Api::V1::Categories', type: :request do
         context('カレントユーザーの所有していないカテゴリーの場合') do
           let(:category) { create(:category) }
 
-          it('401レスポンスを返す') do
+          it('404レスポンスを返す') do
             put("/api/v1/categories/#{category.id}", headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end
@@ -148,9 +148,9 @@ RSpec.describe 'Api::V1::Categories', type: :request do
           let!(:category) { create(:category) }
           let(:params) { { category: { title: 'new_title' } } }
 
-          it('401レスポンスを返す') do
+          it('404レスポンスを返す') do
             delete("/api/v1/categories/#{category.id}", headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end

@@ -1,7 +1,6 @@
 class Api::V1::CategoriesController < ApplicationController
   before_action(:logged_in_user)
   before_action(:set_category, only: [:update, :destroy])
-  before_action(:current_user_is_category_user, only: [:update, :destroy])
 
   # GET /api/v1/categories
   def index
@@ -40,11 +39,7 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   def set_category
-    @category = Category.find_by(id: params[:id])
+    @category = current_user.categories.find_by(id: params[:id])
     head(404) unless @category
-  end
-
-  def current_user_is_category_user
-    head(401) unless current_user == @category.user
   end
 end

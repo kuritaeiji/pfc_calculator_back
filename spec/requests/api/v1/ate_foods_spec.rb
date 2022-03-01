@@ -158,7 +158,7 @@ RSpec.describe 'Api::V1::AteFoods', type: :request do
 
           it('401レスポンスを返す') do
             put("/api/v1/ate_foods/#{ate_food.id}", headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end
@@ -202,7 +202,7 @@ RSpec.describe 'Api::V1::AteFoods', type: :request do
 
           it('401レスポンスを返す') do
             delete(path, headers: login_header(user))
-            expect(status).to eq(401)
+            expect(status).to eq(404)
           end
         end
       end
