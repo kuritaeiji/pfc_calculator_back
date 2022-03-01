@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_26_090019) do
+ActiveRecord::Schema.define(version: 2022_02_28_023951) do
+
+  create_table "ate_foods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.bigint "day_id"
+    t.bigint "food_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["day_id"], name: "index_ate_foods_on_day_id"
+    t.index ["food_id"], name: "index_ate_foods_on_food_id"
+  end
 
   create_table "bodies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.decimal "weight", precision: 10, scale: 2, default: "0.0", null: false
@@ -59,6 +69,8 @@ ActiveRecord::Schema.define(version: 2022_02_26_090019) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "ate_foods", "days"
+  add_foreign_key "ate_foods", "foods"
   add_foreign_key "bodies", "days"
   add_foreign_key "categories", "users"
   add_foreign_key "days", "users"

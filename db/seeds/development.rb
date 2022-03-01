@@ -11,9 +11,20 @@
 
   3.times do |num|
     category = user.categories.create!(title: "カテゴリー#{num}")
+    day = Day.create!(user: user, date: Date.today - num.day)
+    Body.create!(weight: 50, percentage: 20, day: day)
+
     3.times do |number|
-      category.foods.create!(title: "鶏胸肉#{number}", per: 100, unit: 'g',
-                             calory: 120, protein: 23.45, fat: 0.1, carbonhydrate: 0.23)
+      food = category.foods.create!(
+        title: "鶏胸肉#{number}",
+        per: 100,
+        unit: 'g',
+        calory: 120,
+        protein: 23.45,
+        fat: 0.1,
+        carbonhydrate: 0.23
+      )
+      day.ate_foods.create!(amount: 100, food: food)
     end
   end
 end
