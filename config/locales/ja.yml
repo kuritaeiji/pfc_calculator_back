@@ -23,6 +23,7 @@ ja:
         percengate: 体脂肪率
       ate_food:
         amount: 量
+        food_id: 食材・料理
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'
