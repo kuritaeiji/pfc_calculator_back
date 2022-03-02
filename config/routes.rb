@@ -22,6 +22,12 @@ Rails.application.routes.draw do
       end
       resources(:ate_foods, only: [:update, :destroy])
       resources(:dishes, only: [:update, :destroy])
+      resources(:charts) do
+        collection do
+          get('date_weight')
+          get('date_percentage')
+        end
+      end
     end
   end
 end

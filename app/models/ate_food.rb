@@ -5,6 +5,7 @@ class AteFood < ApplicationRecord
   validates(:amount, decimal: true)
 
   default_scope { order(:id) }
+  delegate(:title, to: :food)
 
   class << self
     def define_attrs(*attr_names)
