@@ -4,8 +4,8 @@ class Api::V1::DaysController < ApplicationController
 
   # POST /api/v1/days
   def create
-    current_user.days.create(day_params)
-    head(200)
+    day = current_user.days.create(day_params)
+    render(json: day, serializer: DaySerializer)
   end
 
   private
@@ -15,6 +15,7 @@ class Api::V1::DaysController < ApplicationController
   end
 
   def already_created_day
-    head(200) if current_user.days.find_by(day_params)
+    day = current_user.days.find_by(day_params)
+    render(json: day, serializer: DaySerializer) if day
   end
 end

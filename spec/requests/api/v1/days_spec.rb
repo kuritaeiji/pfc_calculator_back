@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Days', type: :request do
-  describe('GET /api/v1/days') do
+  describe('POST /api/v1/days') do
     let(:path) { '/api/v1/days' }
 
     context('ログインしている場合') do
@@ -14,6 +14,16 @@ RSpec.describe 'Api::V1::Days', type: :request do
           end.to change(user.days, :count).by(1)
           expect(status).to eq(200)
         end
+
+        it('dayオブジェクトが返される') do
+          post(path, headers: login_header(user), params: { day: { date: '2022-01-01' } })
+          expect(json['day']['id'].nil?).to eq(false)
+          expect(json['day']['date'].nil?).to eq(false)
+          expect(json['day']['calory']).to eq('0.0')
+          expect(json['day']['protein']).to eq('0.0')
+          expect(json['day']['fat']).to eq('0.0')
+          expect(json['day']['carbonhydrate']).to eq('0.0')
+        end
       end
 
       context('既にdayオブジェクトが作られている場合') do
@@ -24,6 +34,11 @@ RSpec.describe 'Api::V1::Days', type: :request do
             post(path, headers: login_header(user), params: { day: { date: '2022-01-01' } })
           end.not_to change(user.days, :count)
           expect(status).to eq(200)
+        end
+
+        it('dayオブジェクトが返される') do
+          post(path, headers: login_header(user), params: { day: { date: '2022-01-01' } })
+          expect(json['day'].present?).to eq(true)
         end
       end
     end
