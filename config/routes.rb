@@ -24,10 +24,10 @@ Rails.application.routes.draw do
       resources(:dishes, only: [:update, :destroy])
       resources(:charts) do
         collection do
-          get('date_weight')
-          get('date_percentage')
-          get('month_weight')
-          get('month_percentage')
+          [:weight, :percentage, :calory, :protein, :fat, :carbonhydrate].each do |attr_name|
+            send(:get, "date_#{attr_name}")
+            send(:get, "month_#{attr_name}")
+          end
         end
       end
     end

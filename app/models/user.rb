@@ -42,11 +42,27 @@ class User < ApplicationRecord
   end
 
   def average_month_weight(year, month)
-    average_month_body_attr(year, month, 'bodies.weight') || 0
+    average_month_body(year, month, 'bodies.weight') || 0
   end
 
   def average_month_percentage(year, month)
-    average_month_body_attr(year, month, 'bodies.percentage') || 0
+    average_month_body(year, month, 'bodies.percentage') || 0
+  end
+
+  def average_month_calory(year, month)
+    average_month_calory_and_pfc(year, month, :calory)
+  end
+
+  def average_month_protein(year, month)
+    average_month_calory_and_pfc(year, month, :protein)
+  end
+
+  def average_month_fat(year, month)
+    average_month_calory_and_pfc(year, month, :fat)
+  end
+
+  def average_month_carbonhydrate(year, month)
+    average_month_calory_and_pfc(year, month, :carbonhydrate)
   end
 
   private
@@ -55,8 +71,17 @@ class User < ApplicationRecord
     User.where.not(id: id)
   end
 
-  def average_month_body_attr(year, month, body_attr_name)
+  def month_days(year, month)
     days.where('YEAR(date) = ?', year).where('MONTH(date) = ?', month)
-        .eager_load(:body).average(body_attr_name)
+  end
+
+  def average_month_body(year, month, attr_name)
+    month_days(year, month).eager_load(:body).average(attr_name)
+  end
+
+  def average_month_calory_and_pfc(year, month, attr_name)
+    return 0 unless month_days(year, month).present?
+
+    (month_days(year, month).to_a.sum(&attr_name) / month_days(year, month).count).round(2)
   end
 end

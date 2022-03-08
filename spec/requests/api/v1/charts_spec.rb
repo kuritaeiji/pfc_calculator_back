@@ -79,7 +79,7 @@ RSpec.describe 'Api::V1::Charts', type: :request do
           date = month.ago(n.month)
           5.times do |num|
             day = create(:day, user: user, date: date.since(num.day))
-            body = create(:body, day: day, weight: num * 10)
+            create(:body, day: day, weight: num * 10)
           end
         end
 
@@ -121,6 +121,58 @@ RSpec.describe 'Api::V1::Charts', type: :request do
     context('ログインしていない場合') do
       it('401レスポンスを返す') do
         get('/api/v1/charts/month_percentage')
+        expect(status).to eq(401)
+      end
+    end
+  end
+
+  describe('GET /api/v1/charts/date_calory') do
+    context('ログインしている場合') do
+      let(:user) { create(:user) }
+
+      it('日付毎のカロリーの合計値を返す') do
+        date = Date.new(2020, 1, 1)
+        day1 = create(:day, user: user, date: date)
+        create(:dish, day: day1, calory: 200)
+        create(:dish, day: day1, calory: 300)
+        create(:day, user: user, date: date.ago(1.day))
+
+        get('/api/v1/charts/date_calory', headers: login_header(user), params: { date: '2020-01-01' })
+        expect(status).to eq(200)
+        expect(json['chart']).to eq([].fill(0, 0, 8) + ['0.0'] + ['500.0'])
+      end
+    end
+
+    context('ログインしていない場合') do
+      it('401レスポンスを返す') do
+        get('/api/v1/charts/date_calory')
+        expect(status).to eq(401)
+      end
+    end
+  end
+
+  describe('GET /api/v1/charts/month_calory') do
+    context('ログインしている場合') do
+      let(:user) { create(:user) }
+
+      it('月ごとの平均カロリーを返す') do
+        date = Date.new(2020, 1, 1)
+        5.times do |n|
+          month_date = date.since(n.month)
+          5.times do |number|
+            day = create(:day, user: user, date: month_date.since(number.day))
+            create(:dish, day: day, calory: number * 100)
+          end
+        end
+
+        get('/api/v1/charts/month_calory', headers: login_header(user), params: { month: '2020-10' })
+        expect(json['chart']).to eq([].fill('200.0', 0, 5) + [].fill(0, 0, 5))
+      end
+    end
+
+    context('ログインしていない場合') do
+      it('401レスポンスを返す') do
+        get('/api/v1/charts/month_calory')
         expect(status).to eq(401)
       end
     end

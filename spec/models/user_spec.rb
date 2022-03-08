@@ -185,6 +185,31 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe('average_month_calory_and_pfc') do
+    let(:user) { create(:user) }
+
+    context('ユーザーがある月のdayオブジェクトを所持している場合') do
+      it('カロリーを返す') do
+        date = Date.new(2020, 1, 1)
+        day1 = create(:day, date: date, user: user)
+        day2 = create(:day, date: date.since(1.day), user: user)
+        create(:dish, day: day1, calory: 100.13)
+        create(:dish, day: day2, calory: 100.12)
+
+        not_day = create(:day, date: date.since(1.month), user: user)
+        create(:dish, day: not_day)
+
+        expect(user.average_month_calory(date.year, date.month)).to eq(100.13)
+      end
+    end
+
+    context('ユーザーがある月のdayオブジェクトを所持していない場合') do
+      it('0を返す') do
+        expect(user.average_month_calory(2020, 1)).to eq(0)
+      end
+    end
+  end
+
   describe('create_token') do
     it('トークンを返す') do
       Timecop.freeze(Time.now)
