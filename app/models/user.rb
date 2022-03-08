@@ -41,9 +41,22 @@ class User < ApplicationRecord
     Dish.where(day_id: day_ids)
   end
 
+  def average_month_weight(year, month)
+    average_month_body_attr(year, month, 'bodies.weight') || 0
+  end
+
+  def average_month_percentage(year, month)
+    average_month_body_attr(year, month, 'bodies.percentage') || 0
+  end
+
   private
 
   def other_user
     User.where.not(id: id)
+  end
+
+  def average_month_body_attr(year, month, body_attr_name)
+    days.where('YEAR(date) = ?', year).where('MONTH(date) = ?', month)
+        .eager_load(:body).average(body_attr_name)
   end
 end

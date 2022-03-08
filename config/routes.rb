@@ -26,6 +26,8 @@ Rails.application.routes.draw do
         collection do
           get('date_weight')
           get('date_percentage')
+          get('month_weight')
+          get('month_percentage')
         end
       end
     end

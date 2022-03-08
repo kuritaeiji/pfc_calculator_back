@@ -8,9 +8,17 @@ module Chart
   end
 
   def line_month_weight_data
+    (0..9).map do |n|
+      date = end_month_date.ago(n.month)
+      current_user.average_month_weight(date.year, date.month)
+    end.reverse
   end
 
-  def line_percentage_month_data
+  def line_month_percentage_data
+    (0..9).map do |n|
+      date = end_month_date.ago(n.month)
+      current_user.average_month_percentage(date.year, date.month)
+    end.reverse
   end
 
   def line_calory_day_data
@@ -27,20 +35,18 @@ module Chart
 
   private
 
-  def start_date
-    @start_date ||= end_date - 10
+  def end_date
+    @end_date ||= params[:date].to_date
   end
 
-  def end_date
-    @end_date ||= params[:date].to_date + 1
+  def end_month_date
+    @end_month_date ||= "#{params[:month]}-01".to_date
   end
 
   def create_line_date_body_data(body_attr_name)
-    days = current_user.days.where(date: start_date...end_date).eager_load(:body)
-
-    (start_date...end_date).to_a.reduce([]) do |data, date|
-      day = days.find_by(date: date)
-      data << (day&.body&.send(body_attr_name) || 0)
-    end
+    (0..9).map do |n|
+      date = end_date.ago(n.day)
+      current_user.days.find_by(date: date)&.body&.send(body_attr_name) || 0
+    end.reverse
   end
 end

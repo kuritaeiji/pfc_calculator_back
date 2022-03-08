@@ -143,6 +143,48 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe('average_month_weight') do
+    it('ある月の平均体重を返す') do
+      user = create(:user)
+      day1 = create(:day, user: user, date: '2020-01-01')
+      day2 = create(:day, user: user, date: '2020-01-02')
+      create(:day, user: user, date: '2020-01-03')
+      create(:body, day: day1, weight: 50)
+      create(:body, day: day2, weight: 40)
+
+      expect(user.average_month_weight(2020, 1)).to eq(45)
+    end
+
+    it('bodyが存在しない時0を返す') do
+      user = create(:user)
+      create(:day, user: user, date: '2020-01-01')
+      create(:day, user: user, date: '2020-01-02')
+
+      expect(user.average_month_weight(2020, 1)).to eq(0)
+    end
+  end
+
+  describe('average_month_percentage') do
+    it('ある月の平均体脂肪率を返す') do
+      user = create(:user)
+      day1 = create(:day, user: user, date: '2020-01-01')
+      day2 = create(:day, user: user, date: '2020-01-02')
+      create(:day, user: user, date: '2020-01-03')
+      create(:body, day: day1, percentage: 30)
+      create(:body, day: day2, percentage: 20)
+
+      expect(user.average_month_percentage(2020, 1)).to eq(25)
+    end
+
+    it('bodyが存在しない時0を返す') do
+      user = create(:user)
+      create(:day, user: user, date: '2020-01-01')
+      create(:day, user: user, date: '2020-01-02')
+
+      expect(user.average_month_percentage(2020, 1)).to eq(0)
+    end
+  end
+
   describe('create_token') do
     it('トークンを返す') do
       Timecop.freeze(Time.now)

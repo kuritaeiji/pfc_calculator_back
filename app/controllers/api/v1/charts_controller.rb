@@ -11,4 +11,14 @@ class Api::V1::ChartsController < ApplicationController
   def date_percentage
     render(json: { chart: line_date_percentage_data })
   end
+
+  # GET /api/v1/charts/month_weight?month=2020-10
+  def month_weight
+    render(json: { chart: line_month_weight_data })
+  end
+
+  # GET /api/v1/charts/month_percentage?month=2020-10
+  def month_percentage
+    render(json: { chart: line_month_percentage_data })
+  end
 end
