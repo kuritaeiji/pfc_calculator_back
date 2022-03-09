@@ -6,7 +6,7 @@ RSpec.describe UserMailer, type: :mailer do
     UserMailer.with(user: user).activate_user_email.deliver_now
     mail = ActionMailer::Base.deliveries.last
 
-    expect(mail.from[0]).to eq('pfc-calculator@heroku.com')
+    expect(mail.from[0]).to eq('pfc-calculator@outlook.jp')
     expect(mail.to[0]).to eq(user.email)
     expect(mail.subject).to eq('アカウント有効化のお知らせ')
     expect(mail.body).to match('1時間')
