@@ -1,36 +1,50 @@
 module Chart
-  def line_date_weight_data
-    create_line_date_body_data(:weight)
+  def date_weight_data
+    create_date_body_data(:weight)
   end
 
-  def line_date_percentage_data
-    create_line_date_body_data(:percentage)
+  def date_percentage_data
+    create_date_body_data(:percentage)
   end
 
-  def line_month_weight_data
-    (0..9).map do |n|
-      date = end_month_date.ago(n.month)
-      current_user.average_month_weight(date.year, date.month)
-    end.reverse
+  def month_weight_data
+    create_month_body_data(:weight)
   end
 
-  def line_month_percentage_data
-    (0..9).map do |n|
-      date = end_month_date.ago(n.month)
-      current_user.average_month_percentage(date.year, date.month)
-    end.reverse
+  def month_percentage_data
+    create_month_body_data(:percentage)
   end
 
-  def line_calory_day_data
+  def date_calory_data
+    create_date_calory_and_pfc_data(:calory)
   end
 
-  def line_calory_month_data
+  def date_protein_data
+    create_date_calory_and_pfc_data(:protein)
   end
 
-  def line_pfc_day_data
+  def date_fat_data
+    create_date_calory_and_pfc_data(:fat)
   end
 
-  def line_pfc_month_chart
+  def date_carbonhydrate_data
+    create_date_calory_and_pfc_data(:carbonhydrate)
+  end
+
+  def month_calory_data
+    create_month_calory_and_prc_data(:calory)
+  end
+
+  def month_protein_data
+    create_month_calory_and_prc_data(:protein)
+  end
+
+  def month_fat_data
+    create_month_calory_and_prc_data(:fat)
+  end
+
+  def month_carbonhydrate_data
+    create_month_calory_and_prc_data(:carbonhydrate)
   end
 
   private
@@ -43,10 +57,30 @@ module Chart
     @end_month_date ||= "#{params[:month]}-01".to_date
   end
 
-  def create_line_date_body_data(body_attr_name)
+  def create_date_body_data(attr_name)
     (0..9).map do |n|
       date = end_date.ago(n.day)
-      current_user.days.find_by(date: date)&.body&.send(body_attr_name) || 0
+      current_user.days.find_by(date: date)&.body&.send(attr_name) || 0
+    end.reverse
+  end
+
+  def create_month_body_data(attr_name)
+    (0..9).map do |n|
+      date = end_month_date.ago(n.month)
+      current_user.send("average_month_#{attr_name}", date.year, date.month)
+    end.reverse
+  end
+
+  def create_date_calory_and_pfc_data(attr_name)
+    (0..9).map do |n|
+      current_user.days.find_by(date: end_date.ago(n.day))&.send(attr_name) || 0
+    end.reverse
+  end
+
+  def create_month_calory_and_prc_data(attr_name)
+    (0..9).map do |n|
+      date = end_month_date.ago(n.month)
+      current_user.send("average_month_#{attr_name}", date.year, date.month)
     end.reverse
   end
 end
