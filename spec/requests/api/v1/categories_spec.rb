@@ -16,9 +16,24 @@ RSpec.describe 'Api::V1::Categories', type: :request do
     end
 
     context('ログインしていない場合') do
-      it('401エラーを返す') do
-        get(path)
-        expect(status).to eq(401)
+      context('有効期限が切れている場合') do
+        it('401エラーを返し、バリデーションメッセージを返す') do
+          user = create(:user)
+          token = user.create_token
+
+          Timecop.travel(Time.now + 1.year)
+          get(path, headers: { Authorization: "Bearer #{token}" })
+          expect(status).to eq(401)
+          expect(json['message']).to eq('有効期限が切れています。再度ログインして下さい。')
+        end
+      end
+
+      context('tokenがない場合') do
+        it('401エラーを返す') do
+          get(path)
+          expect(status).to eq(401)
+          expect(response.body).to eq('')
+        end
       end
     end
   end

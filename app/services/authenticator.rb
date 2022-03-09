@@ -18,7 +18,8 @@ module Authenticator
   end
 
   def logged_in_user
-    head(:unauthorized) unless current_user
+    render(status: 401, json: { message: '有効期限が切れています。再度ログインして下さい。' }) if current_user == :expired
+    head(401) unless current_user
   end
 
   def current_user
@@ -29,6 +30,8 @@ module Authenticator
 
   def fetch_user(token)
     User.find_from_token(token)
+  rescue JWT::ExpiredSignature
+    :expired
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
     nil
   end
