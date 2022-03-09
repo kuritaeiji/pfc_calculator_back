@@ -3,6 +3,7 @@ FROM ruby:2.7.1
 RUN apt-get update
 RUN apt-get install -y build-essential default-mysql-client
 RUN apt-get install -y nodejs npm
+RUN apt-get install -y vim
 RUN npm install n -g
 RUN n stable
 RUN apt purge -y nodejs npm

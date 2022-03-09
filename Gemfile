@@ -26,6 +26,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'active_model_serializers'
 gem 'jwt'
 gem 'rack-cors'
+gem 'sendgrid-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

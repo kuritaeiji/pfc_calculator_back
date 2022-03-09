@@ -8,12 +8,13 @@ class UserMailer < ApplicationMailer
   private
 
   def create_url
-    origin = if Rails.env.production?
-               'http://pfc-calculator-front.herokuapp.com'
-             else
-               'http://localhost:8080'
-             end
     @url = "#{origin}/activate?token=#{token}"
+  end
+
+  def origin
+    return 'http://pfc-calculator-front.herokuapp.com' if Rails.env.production?
+
+    'http://localhost:8080'
   end
 
   def create_lifetime_string

@@ -18,7 +18,7 @@ module Authenticator
   end
 
   def logged_in_user
-    render(status: 401, json: { message: '有効期限が切れています。再度ログインして下さい。' }) if current_user == :expired
+    render(status: 401, json: { code: 'expired_token', message: '有効期限が切れています。再度ログインして下さい。' }) if current_user == :expired
     head(401) unless current_user
   end
 
