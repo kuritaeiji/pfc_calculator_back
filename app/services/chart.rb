@@ -35,7 +35,7 @@ module Chart
     create_month_calory_and_prc_data(:calory)
   end
 
-  def month_protien_data
+  def month_protein_data
     create_month_calory_and_prc_data(:protein)
   end
 
