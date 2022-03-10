@@ -1,6 +1,36 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Days', type: :request do
+  describe('GET /api/v1/days/:date') do
+    context('ログインしている場合') do
+      let(:user) { create(:user) }
+
+      context('dayオブジェクトが見つかる場合') do
+        let(:day) { create(:day, user: user) }
+
+        it('dayオブジェクトを返す') do
+          get("/api/v1/days/#{day.date}", headers: login_header(user))
+          expect(status).to eq(200)
+          expect(json['day']['id']).to eq(day.id)
+        end
+      end
+
+      context('dayオブジェクトが見つからない場合') do
+        it('404レスポンスを返す') do
+          get('/api/v1/days/2020-01-01', headers: login_header(user))
+          expect(status).to eq(404)
+        end
+      end
+    end
+
+    context('ログインしていない場合') do
+      it('401レスポンスを返す') do
+        get('/api/v1/days/2020-01-01')
+        expect(status).to eq(401)
+      end
+    end
+  end
+
   describe('POST /api/v1/days') do
     let(:path) { '/api/v1/days' }
 

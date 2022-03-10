@@ -21,12 +21,12 @@ class UserMailer < ApplicationMailer
     @lifetime_string = AuthToken.lifetime_string(lifetime: default_lifetime)
   end
 
-  def token
-    user.create_token(lifetime: default_lifetime)
-  end
-
   def user
     params[:user]
+  end
+
+  def token
+    user.create_token(lifetime: default_lifetime)
   end
 
   def default_lifetime

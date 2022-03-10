@@ -89,6 +89,29 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe('other_not_activated_user') do
+    let(:email) { 'example@example.com' }
+    let(:user) { create(:user, email: email) }
+
+    context('同じメアドで他に有効化さていないユーザーが存在する場合') do
+      let!(:user1) { create(:user, email: email, activated: false) }
+      let!(:user2) { create(:user, email: email, activated: false) }
+
+      it('ユーザーたちを返す') do
+        users = user.other_not_activated_user
+        expect(users.count).to eq(2)
+        expect(users[0]).to eq(user1)
+        expect(users[1]).to eq(user2)
+      end
+    end
+
+    context('他にユーザーが存在しない場合') do
+      it('空配列を返す') do
+        expect(user.other_not_activated_user.present?).to eq(false)
+      end
+    end
+  end
+
   describe('foods') do
     it('ユーザーが所持しているfoodsを取得する') do
       user = create(:user, :with_foods)

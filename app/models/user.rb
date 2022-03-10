@@ -19,9 +19,14 @@ class User < ApplicationRecord
     AuthToken.create_token(sub: id, lifetime: lifetime)
   end
 
-  # 自分以外の同じメアドで有効化されているユーザーを返す
+  # 自分以外の同じメアドで有効化されているユーザーが存在するか？
   def other_activated_user?
     other_user.where(activated: true, email: email).present?
+  end
+
+  # 自分以外の同じメアドで有効化されていないユーザーを返す
+  def other_not_activated_user
+    other_user.where(activated: false, email: email)
   end
 
   # カテゴリーテーブルとjoinした状態で、ユーザーのフードを取ってくる

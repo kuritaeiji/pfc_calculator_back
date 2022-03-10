@@ -10,9 +10,10 @@ module Authenticator
 
   def activate_user
     user = fetch_user(activate_params[:token])
-    return head(:unauthorized) unless user
+    return head(:unauthorized) if user.nil? || user == :expired
     return head(:conflict) if user.activated? || user.other_activated_user?
 
+    user.other_not_activated_user.destroy_all
     user.update(activated: true)
     head(:ok)
   end

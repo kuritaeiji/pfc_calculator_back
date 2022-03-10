@@ -43,11 +43,21 @@ RSpec.describe 'Api::V1::Users', type: :request do
       context('ユーザーが見つかる') do
         context('自分自身が有効化されていない') do
           context('他に同じメアドの有効化されたユーザーがいない') do
+            let(:token) { user.create_token(lifetime: lifetime) }
             it('ユーザーが有効化される') do
-              token = user.create_token(lifetime: lifetime)
               put(path, params: { token: token })
               user.reload
               expect(user.activated?).to eq(true)
+            end
+
+            it('自分と同じメアドの有効化されていないユーザー達を削除する') do
+              create_list(:user, 2, email: user.email, activated: false)
+              expect do
+                put(path, params: { token: token })
+              end.to change(User, :count).by(-2)
+              users = User.where(email: user.email)
+              expect(users.count).to eq(1)
+              expect(users.first).to eq(user.reload)
             end
           end
 
@@ -75,6 +85,17 @@ RSpec.describe 'Api::V1::Users', type: :request do
         it('401エラーを返す') do
           other_user = build(:user)
           token = other_user.create_token(lifetime: lifetime)
+          put(path, params: { token: token })
+          expect(status).to eq(401)
+        end
+      end
+
+      context('トークンの期限が切れている場合') do
+        it('401エラーを返す') do
+          user = create(:user)
+          token = user.create_token(lifetime: lifetime)
+          
+          Timecop.travel(Time.now + 1.hour)
           put(path, params: { token: token })
           expect(status).to eq(401)
         end
