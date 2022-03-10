@@ -12,7 +12,7 @@ class UserMailer < ApplicationMailer
   end
 
   def origin
-    return 'http://pfc-calculator-front.herokuapp.com' if Rails.env.production?
+    return 'https://pfc-calculator-front.herokuapp.com' if Rails.env.production?
 
     'http://localhost:8080'
   end
