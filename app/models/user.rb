@@ -85,8 +85,10 @@ class User < ApplicationRecord
   end
 
   def average_month_calory_and_pfc(year, month, attr_name)
-    return 0 unless month_days(year, month).present?
+    # dayはcaloryカラムを持っていないが、averageメソッドをCalculationsWrapperでハックしたため使える
+    month_days(year, month).average(attr_name)
+    # return 0 unless month_days(year, month).present?
 
-    (month_days(year, month).to_a.sum(&attr_name) / month_days(year, month).count).round(2)
+    # (month_days(year, month).sum(attr_name) / month_days(year, month).count).round(2)
   end
 end
