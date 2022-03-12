@@ -32,6 +32,4 @@ RSpec.describe Food, type: :model do
   it('default_scope') do
     expect(Food.all.to_sql).to eq(Food.all.order(:id).to_sql)
   end
-
-  it { is_expected.to delegate_method(:user).to(:category) }
 end
