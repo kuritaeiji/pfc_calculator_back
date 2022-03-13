@@ -47,11 +47,11 @@ class User < ApplicationRecord
   end
 
   def average_month_weight(year, month)
-    average_month_body(year, month, 'bodies.weight') || 0
+    average_month_body(year, month, 'bodies.weight')
   end
 
   def average_month_percentage(year, month)
-    average_month_body(year, month, 'bodies.percentage') || 0
+    average_month_body(year, month, 'bodies.percentage')
   end
 
   def average_month_calory(year, month)
@@ -81,11 +81,11 @@ class User < ApplicationRecord
   end
 
   def average_month_body(year, month, attr_name)
-    month_days(year, month).eager_load(:body).average(attr_name)
+    month_days(year, month).eager_load(:body).average(attr_name) || 0
   end
 
   def average_month_calory_and_pfc(year, month, attr_name)
     # dayはcaloryカラムを持っていないが、averageメソッドをCalculationsWrapperでハックしたため使える
-    month_days(year, month).average(attr_name)
+    month_days(year, month).average(attr_name) || 0
   end
 end

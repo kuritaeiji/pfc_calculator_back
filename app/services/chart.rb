@@ -1,86 +1,78 @@
 module Chart
+  include(Date)
+  include(Body)
+  include(Month)
+  include(CaloryPfc)
+
   def date_weight_data
-    create_date_body_data(:weight)
+    last_10_days do |date|
+      body_on_date(:weight, date)
+    end
   end
 
   def date_percentage_data
-    create_date_body_data(:percentage)
+    last_10_days do |date|
+      body_on_date(:percentage, date)
+    end
   end
 
   def month_weight_data
-    create_month_body_data(:weight)
+    last_10_months do |month_date|
+      body_on_month(:weight, month_date)
+    end
   end
 
   def month_percentage_data
-    create_month_body_data(:percentage)
+    last_10_months do |month_date|
+      body_on_month(:percentage, month_date)
+    end
   end
 
   def date_calory_data
-    create_date_calory_and_pfc_data(:calory)
+    last_10_days do |date|
+      calory_pfc_on_date(:calory, date)
+    end
   end
 
   def date_protein_data
-    create_date_calory_and_pfc_data(:protein)
+    last_10_days do |date|
+      calory_pfc_on_date(:protein, date)
+    end
   end
 
   def date_fat_data
-    create_date_calory_and_pfc_data(:fat)
+    last_10_days do |date|
+      calory_pfc_on_date(:fat, date)
+    end
   end
 
   def date_carbonhydrate_data
-    create_date_calory_and_pfc_data(:carbonhydrate)
+    last_10_days do |date|
+      calory_pfc_on_date(:carbonhydrate, date)
+    end
   end
 
   def month_calory_data
-    create_month_calory_and_prc_data(:calory)
+    last_10_months do |month_date|
+      calory_pfc_on_month(:calory, month_date)
+    end
   end
 
   def month_protein_data
-    create_month_calory_and_prc_data(:protein)
+    last_10_months do |month_date|
+      calory_pfc_on_month(:protein, month_date)
+    end
   end
 
   def month_fat_data
-    create_month_calory_and_prc_data(:fat)
+    last_10_months do |month_date|
+      calory_pfc_on_month(:fat, month_date)
+    end
   end
 
   def month_carbonhydrate_data
-    create_month_calory_and_prc_data(:carbonhydrate)
-  end
-
-  private
-
-  def end_date
-    @end_date ||= params[:date].to_date
-  end
-
-  def end_month_date
-    @end_month_date ||= "#{params[:month]}-01".to_date
-  end
-
-  def create_date_body_data(attr_name)
-    (0..9).map do |n|
-      date = end_date.ago(n.day)
-      current_user.days.find_by(date: date)&.body&.send(attr_name) || 0
-    end.reverse
-  end
-
-  def create_month_body_data(attr_name)
-    (0..9).map do |n|
-      date = end_month_date.ago(n.month)
-      current_user.send("average_month_#{attr_name}", date.year, date.month)
-    end.reverse
-  end
-
-  def create_date_calory_and_pfc_data(attr_name)
-    (0..9).map do |n|
-      current_user.days.find_by(date: end_date.ago(n.day))&.send(attr_name) || 0
-    end.reverse
-  end
-
-  def create_month_calory_and_prc_data(attr_name)
-    (0..9).map do |n|
-      date = end_month_date.ago(n.month)
-      current_user.send("average_month_#{attr_name}", date.year, date.month)
-    end.reverse
+    last_10_months do |month_date|
+      calory_pfc_on_month(:carbonhydrate, month_date)
+    end
   end
 end
