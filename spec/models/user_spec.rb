@@ -166,6 +166,126 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe('weight_on(date)') do
+    let(:user) { create(:user) }
+
+    context('dayオブジェクトを所有している時') do
+      let(:date) { '2020-01-01' }
+      let(:day) { create(:day, user: user, date: date) }
+      let!(:body) { create(:body, day: day, weight: 50) }
+
+      it('体重を返す') do
+        expect(user.weight_on(date)).to eq(50)
+      end
+    end
+
+    context('dayオブジェクトを所有していない時') do
+      it('0を返す') do
+        expect(user.weight_on('2020-01-01')).to eq(0)
+      end
+    end
+  end
+
+  describe('percantage_on(date)') do
+    let(:user) { create(:user) }
+
+    context('dayオブジェクトを所有している時') do
+      let(:date) { '2020-01-01' }
+      let(:day) { create(:day, user: user, date: date) }
+      let!(:body) { create(:body, day: day, percentage: 50) }
+
+      it('体脂肪率を返す') do
+        expect(user.percentage_on(date)).to eq(50)
+      end
+    end
+
+    context('dayオブジェクトを所有していない時') do
+      it('0を返す') do
+        expect(user.weight_on('2020-01-01')).to eq(0)
+      end
+    end
+  end
+
+  describe('calory_on(date)') do
+    let(:user) { create(:user) }
+
+    context('dayオブジェクトを所有している時') do
+      let(:date) { '2020-01-01' }
+      let(:day) { create(:day, user: user, date: date) }
+      let!(:dish) { create(:dish, calory: 50, day: day) }
+
+      it('カロリーを返す') do
+        expect(user.calory_on(date)).to eq(50)
+      end
+    end
+
+    context('dayオブジェクトを所有していない時') do
+      it('0を返す') do
+        expect(user.calory_on('2020-01-01')).to eq(0)
+      end
+    end
+  end
+
+  describe('protein_on(date)') do
+    let(:user) { create(:user) }
+
+    context('dayオブジェクトを所有している時') do
+      let(:date) { '2020-01-01' }
+      let(:day) { create(:day, user: user, date: date) }
+      let!(:dish) { create(:dish, protein: 50, day: day) }
+
+      it('タンパク質を返す') do
+        expect(user.protein_on(date)).to eq(50)
+      end
+    end
+
+    context('dayオブジェクトを所有していない時') do
+      it('0を返す') do
+        expect(user.protein_on('2020-01-01')).to eq(0)
+      end
+    end
+  end
+
+  describe('fat_on(date)') do
+    let(:user) { create(:user) }
+
+    context('dayオブジェクトを所有している時') do
+      let(:date) { '2020-01-01' }
+      let(:day) { create(:day, user: user, date: date) }
+      let!(:dish) { create(:dish, fat: 50, day: day) }
+
+      it('脂質を返す') do
+        expect(user.fat_on(date)).to eq(50)
+      end
+    end
+
+    context('dayオブジェクトを所有していない時') do
+      it('0を返す') do
+        expect(user.fat_on('2020-01-01')).to eq(0)
+      end
+    end
+  end
+
+  describe('carbonhydrate_on(date)') do
+    let(:user) { create(:user) }
+
+    context('dayオブジェクトを所有している時') do
+      let(:date) { '2020-01-01' }
+      let(:day) { create(:day, user: user, date: date) }
+      let!(:dish) { create(:dish, carbonhydrate: 50, day: day) }
+
+      it('炭水化物を返す') do
+        expect(user.carbonhydrate_on(date)).to eq(50)
+      end
+    end
+
+    context('dayオブジェクトを所有していない時') do
+      it('0を返す') do
+        expect(user.carbonhydrate_on('2020-01-01')).to eq(0)
+      end
+    end
+  end
+
   describe('average_month_weight') do
     it('ある月の平均体重を返す') do
       user = create(:user)

@@ -16,4 +16,5 @@ class Day < ApplicationRecord
   end
 
   define_attrs(:calory, :protein, :fat, :carbonhydrate)
+  delegate(:weight, :percentage, to: :body)
 end

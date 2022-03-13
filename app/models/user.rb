@@ -46,6 +46,30 @@ class User < ApplicationRecord
     Dish.where(day_id: day_ids)
   end
 
+  def weight_on(date)
+    body_and_calory_pfc_on(date, :weight)
+  end
+
+  def percentage_on(date)
+    body_and_calory_pfc_on(date, :percentage)
+  end
+
+  def calory_on(date)
+    body_and_calory_pfc_on(date, :calory)
+  end
+
+  def protein_on(date)
+    body_and_calory_pfc_on(date, :protein)
+  end
+
+  def fat_on(date)
+    body_and_calory_pfc_on(date, :fat)
+  end
+
+  def carbonhydrate_on(date)
+    body_and_calory_pfc_on(date, :carbonhydrate)
+  end
+
   def average_month_weight(year, month)
     average_month_body(year, month, 'bodies.weight')
   end
@@ -74,6 +98,10 @@ class User < ApplicationRecord
 
   def other_user
     User.where.not(id: id)
+  end
+
+  def body_and_calory_pfc_on(date, attr_name)
+    days.find_by(date: date)&.send(attr_name) || 0
   end
 
   def month_days(year, month)

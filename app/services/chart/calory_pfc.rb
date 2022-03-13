@@ -1,7 +1,7 @@
 module Chart::CaloryPfc
   # とある日付のカロリーまたはPFCを返す
   def calory_pfc_on_date(attr_name, date)
-    current_user.days.find_by(date: date)&.send(attr_name) || 0
+    current_user.send("#{attr_name}_on", date)
   end
 
   # とある月の平均カロリーまたはPFCを返す
