@@ -105,12 +105,12 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    enable_starttls_auto: true,
-    address: 'smtp.gmail.com',
-    port: '587',
-    domain: 'smtp.gmail.com',
-    authentication: 'plain',
-    user_name: ENV['GMAIL_USER_NAME'],
-    password: ENV['GMAIL_PASSWORD']
+    user_name: Rails.application.credentials.send_grid[:user_name],
+    password: Rails.application.credentials.send_grid[:api_key],
+    domain: Rails.application.credentials.send_grid[:domain],
+    address: 'smtp.sendgrid.net',
+    port: 587,
+    authentication: :plain,
+    enable_starttls_auto: true
   }
 end
