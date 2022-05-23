@@ -1,6 +1,6 @@
 user = User.find_or_initialize_by(email: 'user@example.com')
 if user.new_record?
-  user.password = password
+  user.password = 'Password1010'
   user.activated = true
   user.save!
 end
