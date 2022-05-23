@@ -8,6 +8,8 @@ jobs:
   build_and_test:
     docker:
       - image: ruby:2.7.1
+        environment:
+          FRONT_ORIGIN: 'http://test.com'
       - image: circleci/mysql:5.7
         environment:
           MYSQL_DATABASE: app_test
