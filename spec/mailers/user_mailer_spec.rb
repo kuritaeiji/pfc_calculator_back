@@ -10,6 +10,10 @@ RSpec.describe UserMailer, type: :mailer do
     expect(mail.to[0]).to eq(user.email)
     expect(mail.subject).to eq('アカウント有効化のお知らせ')
     expect(mail.body).to match('1時間')
-    expect(URI.extract(mail.body.encoded)[0]).to match(/http:\/\/localhost:8080\/activate\?token=/)
+    origin = ENV['FRONT_ORIGIN']
+    regexp = Regexp.new("#{origin}/activate")
+    url = URI.extract(mail.body.encoded)[0]
+    expect(url).to match(regexp)
+    expect(url).to match(/\?token=/)
   end
 end
